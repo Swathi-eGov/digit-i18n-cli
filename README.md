@@ -7,6 +7,11 @@ new keys into the backend.
 
 > **Status:** not published to a package registry yet. Install it locally
 > (see [Setup](#setup)) or via `yarn link` for now.
+>
+> This README is a quick-start overview. For the complete technical
+> reference — full architecture, every command's internal behavior, every
+> source file's exports, the full configuration reference, and known
+> limitations — see **[DOCUMENTATION.md](DOCUMENTATION.md)**.
 
 ## Table of contents
 
