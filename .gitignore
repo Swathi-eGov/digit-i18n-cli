@@ -1,0 +1,13 @@
+node_modules/
+
+# Real secrets/session data — only the .example templates should ever be committed
+.env
+.env.*
+!.env.example
+request-info.json
+
+# Internal working notes, not meant for the public repo
+SESSION-CONTEXT.md
+
+# Local scratch output from running the CLI itself
+localizations/

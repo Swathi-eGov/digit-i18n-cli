@@ -1,0 +1,28 @@
+{
+  "name": "digit-i18n-cli",
+  "version": "0.1.0",
+  "description": "DIGIT localization tooling — local registry sync and reuse-discovery search for DIGIT frontend modules",
+  "type": "module",
+  "bin": {
+    "digit-i18n": "./bin/digit-i18n.js"
+  },
+  "main": "src/cli.js",
+  "scripts": {
+    "start": "node bin/digit-i18n.js",
+    "postinstall": "node bin/postinstall-hook.js || true"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@babel/parser": "^7.29.7",
+    "@babel/traverse": "^7.29.7",
+    "axios": "^1.7.7",
+    "commander": "^12.1.0",
+    "dotenv": "^16.4.5",
+    "fuse.js": "^7.0.0",
+    "glob": "^13.0.6",
+    "google-translate-api-x": "^10.7.2"
+  },
+  "license": "MIT"
+}

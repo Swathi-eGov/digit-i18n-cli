@@ -1,0 +1,19 @@
+{
+  "_comment": "Fallback for 'digit-i18n apply --request-info-file'. The preferred method is DIGIT_USERNAME/DIGIT_PASSWORD in .env (apply logs in fresh itself) - use this file only if you'd rather not store credentials at all. Copy this to a real file (e.g. request-info.json) and fill it with a CURRENT authToken + userInfo, copied fresh from your browser's network tab right before running apply. NEVER commit this file, and never reuse an old one - session tokens expire.",
+  "apiId": "Rainmaker",
+  "authToken": "",
+  "userInfo": {
+    "id": 0,
+    "uuid": "",
+    "userName": "",
+    "name": "",
+    "mobileNumber": "",
+    "emailId": "",
+    "locale": null,
+    "type": "EMPLOYEE",
+    "roles": [],
+    "active": true,
+    "tenantId": "",
+    "permanentCity": null
+  }
+}
