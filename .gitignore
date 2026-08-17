@@ -11,3 +11,6 @@ SESSION-CONTEXT.md
 
 # Local scratch output from running the CLI itself
 localizations/
+
+# Local Claude Code dev tooling config, not part of the package itself
+.mcp.json
