@@ -4,7 +4,7 @@ import config from "./config.js";
 
 // Two files per module/locale:
 //   <locale>.json          — pure mirror of the backend, only ever touched by `sync`
-//   <locale>.pending.json   — new keys staged locally by `add`, not yet uploaded anywhere.
+//   <locale>.pending.json   — new keys staged locally by `stage`, not yet uploaded anywhere.
 // Kept separate deliberately so "<locale>.json" always reflects "what's actually
 // live" and never gets silently mixed with not-yet-real local additions.
 

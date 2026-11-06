@@ -1,5 +1,5 @@
 // Naming convention: DIGIT_{MODULE}_{KEY}
-// Shared by `add` (enforces on creation) and `lint` (validates existing usage).
+// Shared by `stage` (enforces on creation) and `lint` (validates existing usage).
 
 const KEY_FORMAT = /^DIGIT_[A-Z0-9]+(?:_[A-Z0-9]+)+$/;
 
@@ -29,7 +29,7 @@ export function keySuffixTokens(key) {
 
 // A short, deliberately generic list of concepts that almost always belong in
 // the common module rather than being redeclared per module. Not exhaustive —
-// this is a heuristic nudge for `add`, not an enforced rule.
+// this is a heuristic nudge for `stage`, not an enforced rule.
 export const GENERIC_WORDS = [
   "SAVE",
   "CANCEL",

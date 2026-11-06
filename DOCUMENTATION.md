@@ -229,7 +229,7 @@ Exits non-zero if any module/locale combination's API call failed.
 ### `search <query>` — `src/commands/search.js`
 
 ```
-digit-i18n search "<query>" [--module <m>] [--locale <l>] [--limit <n>] [--max-age <minutes>]
+digit-i18n search "<query>" [--module <m>] [--locale <l>] [--limit <n>] [--tenant-id <id>] [--max-age <minutes>]
 ```
 
 Optionally triggers a freshness-gated re-sync (`ensureFreshData()`,
@@ -462,6 +462,7 @@ default (no `continue-on-error` is set anywhere in the template).
 | `src/default-modules.config.json` | The bundled fallback module registry used when no `digit-i18n.config.json` exists in the current directory. |
 | `request-info.example.json` | Template for `apply --request-info-file`. |
 | `github-workflow.example.yml` | GitHub Actions template — see [§6.3](#63-ci-template-for-apply). |
+| `commands/` | Copy-in Claude Code slash command templates (`/i18n-sync`, `/i18n-search`, etc.), one `.md` per CLI command, plus `commands/README.md` with setup instructions. Thin wrappers only — no logic lives here, each one just shells out to the real CLI. `/i18n-apply` always forces `--dry-run` and will not send anything from a chat session. |
 | `README.md` | Quick-start overview and command reference. |
 | `DOCUMENTATION.md` | This file. |
 

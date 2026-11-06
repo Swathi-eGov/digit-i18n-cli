@@ -2,9 +2,9 @@ import { findSourceFiles, scanFilesForKeys } from "./scanner.js";
 import { loadAllMessages } from "./registry.js";
 import { normalizeKey } from "./dedupe.js";
 
-// Shared by `scan` (reports the gap) and `suggest` (drafts payloads to close it).
+// Shared by `scan` (reports the gap) and `export` (drafts payloads to close it).
 // A key counts as "known" if it's in the synced registry OR already staged as
-// a pending entry (via `add`) — either way, someone already gave it a message.
+// a pending entry (via `stage`) — either way, someone already gave it a message.
 //
 // Comparison is whitespace-normalized on both sides: real synced data has been
 // confirmed to contain keys with incidental leading/trailing whitespace (e.g.

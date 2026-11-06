@@ -23,6 +23,7 @@ new keys into the backend.
 - [Commands](#commands)
 - [Data freshness](#data-freshness--nothing-auto-syncs-by-default)
 - [Automatic setup (pre-commit hook)](#automatic-setup-once-this-is-a-real-dependency)
+- [Claude Code slash commands](#claude-code-slash-commands-optional)
 - [CI template for `apply`](#github-workflowexampleyml--ci-template-for-apply)
 - [Supported `t(...)` call patterns](#supported-t-call-patterns)
 - [Design rule](#design-rule-do-not-violate-when-extending-this)
@@ -195,6 +196,8 @@ Options:
 - `-m, --module <module>` — restrict to one module
 - `-l, --locale <locale>` — defaults to `DIGIT_DEFAULT_LOCALE` (or `en_IN`)
 - `-n, --limit <limit>` — max results shown (default 10)
+- `-t, --tenant-id <tenantId>` — tenant id to use if `--max-age` triggers a re-sync
+- `--max-age <minutes>` — auto re-sync stale modules older than this many minutes before searching (see [Data freshness](#data-freshness--nothing-auto-syncs-by-default))
 
 Results are tagged `[pending, not yet uploaded]` when they only exist in a
 local `stage`-staged file, not yet in the synced backend copy. Results are
@@ -257,6 +260,8 @@ only. Follow it with `export` to actually generate something usable.
 Options:
 - `-p, --path <glob>` — files to scan (default `**/*.{js,jsx}`)
 - `-l, --locale <locale>` — locale to check against
+- `-t, --tenant-id <tenantId>` — tenant id to use if `--max-age` triggers a re-sync
+- `--max-age <minutes>` — auto re-sync stale modules older than this many minutes before scanning
 
 ### `export` — draft messages and output a ready-to-review upload payload
 
@@ -295,6 +300,7 @@ Options:
 - `-l, --locale <locale>` — locale to generate the payload for
 - `-t, --tenant-id <tenantId>` — embedded in each payload entry (overrides `DIGIT_TENANT_ID`)
 - `-o, --out <file>` — output path (default `localizations/export.<locale>.json`)
+- `--max-age <minutes>` — auto re-sync stale modules older than this many minutes before drafting
 - `--translate-to <locales>` — auto-translate into other languages, see below
 
 #### Multi-language auto-translation (`export --translate-to`)
@@ -375,6 +381,16 @@ this tool:**
 
 **Verified against a local mock server, never the real DIGIT backend**: decline path sends nothing, approve path sends the exact real request shape (confirmed byte-for-byte against a real captured request), `--dry-run` never even attempts login, wrong credentials fail cleanly with the actual HTTP status + response body, and the `--request-info-file` fallback works unchanged. **Not yet verified: an actual successful login + upsert against a real backend** — that's a deliberate gap (testing it safely would mean writing real data), not an oversight, and is the one thing worth confirming carefully the first time you run this for real.
 
+Options:
+- `-p, --path <glob>` — files to scan (default `**/*.{js,jsx}`)
+- `-l, --locale <locale>` — source locale (the one your staged/drafted messages are in), defaults to `DIGIT_DEFAULT_LOCALE` (or `en_IN`)
+- `-t, --tenant-id <tenantId>` — overrides `DIGIT_TENANT_ID` from `.env`
+- `--to <locales>` — comma-separated locale(s) to upload to in addition to the source locale (defaults to `DIGIT_UPSERT_LOCALES` from `.env` if omitted)
+- `--request-info-file <file>` — path to a JSON file with a real, current `authToken` + `userInfo` (manual fallback — see above)
+- `--max-age <minutes>` — auto re-sync stale modules older than this many minutes first
+- `--yes` — skip the confirmation prompt (intended for CI — see the [CI template](#github-workflowexampleyml--ci-template-for-apply))
+- `--dry-run` — show what would be sent and exit; never authenticates, never sends anything
+
 ### `deadcheck` — find keys no longer used anywhere
 
 ```bash
@@ -395,6 +411,8 @@ dead-key list specifically so you can cross-check before removing anything.
 Options:
 - `-p, --path <glob>` — files to scan (default `**/*.{js,jsx}`)
 - `-l, --locale <locale>` — locale to check
+- `-t, --tenant-id <tenantId>` — tenant id to use if `--max-age` triggers a re-sync
+- `--max-age <minutes>` — auto re-sync stale modules older than this many minutes before checking
 
 ### `install-hooks` — wire a warn-only pre-commit check into a real repo
 
@@ -476,6 +494,20 @@ at all, just listing the dependency.
 - **Known limitation**: `--ignore-scripts` environments (common in CI, or
   teams that disable lifecycle scripts) skip this entirely — falls back to
   the manual `install-hooks` step.
+
+## Claude Code slash commands (optional)
+
+If you (or your team) use Claude Code while working on a module, `commands/`
+in this repo is a copy-in set of `/i18n-...` slash commands — `/i18n-sync`,
+`/i18n-search`, `/i18n-stage`, `/i18n-lint`, `/i18n-scan`, `/i18n-export`,
+`/i18n-deadcheck`, `/i18n-apply`, `/i18n-install-hooks` — each a thin wrapper
+around the real CLI command of the same name. Copy them into your module's
+own `.claude/commands/` folder; see **[commands/README.md](commands/README.md)**
+for exact steps and the one deliberate restriction (`/i18n-apply` always
+previews with `--dry-run` and never sends anything from chat — publishing
+still requires running the real `digit-i18n apply` yourself, in your own
+terminal). This is purely an additive convenience layer — the CLI itself is
+unaffected and keeps working exactly as documented above.
 
 ### `github-workflow.example.yml` — CI template for `apply`
 
@@ -610,7 +642,9 @@ specifically for CI, where a PR review already served that purpose — see the
 | `.env.example` | Template for `.env` — backend URL, tenant id, and (for `apply`) login credentials |
 | `request-info.example.json` | Template for `apply --request-info-file` |
 | `digit-i18n.config.example.json` | Module registry template — copy to `digit-i18n.config.json` and edit |
+| `src/default-modules.config.json` | Bundled fallback module registry (same shape as the example above), used when no `digit-i18n.config.json` exists in the current directory |
 | `github-workflow.example.yml` | Template to copy into a consuming repo's `.github/workflows/` — runs `apply --yes` on merge |
+| `commands/` | Copy-in Claude Code `/i18n-...` slash commands — see [commands/README.md](commands/README.md) |
 
 ## Roadmap
 
