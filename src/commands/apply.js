@@ -9,8 +9,10 @@ import { confirm } from "../confirm.js";
 
 // The ONLY command in this tool that ever writes to the backend. Everything
 // else (sync excepted, which only ever reads) stays local-only, on purpose.
-// Never invoke this from install-hooks/the pre-commit flow — see
-// SESSION-CONTEXT.md for why that was deliberately rejected.
+// Never invoke this from install-hooks/the pre-commit flow — a login and an
+// interactive confirmation have no reliable place in a non-interactive git
+// hook (see CLAUDE.md's "write path" section and README.md's install-hooks
+// docs for the full reasoning).
 //
 // Authentication, in priority order:
 //   1. --request-info-file <path>  — a real, CURRENT authToken + userInfo,

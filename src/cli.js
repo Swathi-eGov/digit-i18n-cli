@@ -20,7 +20,7 @@ program
       "`apply` is the only command that ever writes to it, and only when you explicitly run it\n" +
       "and confirm — every other command stays local-only. See apply --help / export --help."
   )
-  .version("0.1.0");
+  .version("1.0.0");
 
 program
   .command("sync")

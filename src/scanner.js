@@ -25,7 +25,7 @@ export async function findSourceFiles(pattern = "**/*.{js,jsx}", cwd = process.c
 //      confirmed some entries diverge from name==value, including a real typo).
 // Anything else (template literals with variables, computed member access,
 // etc.) is genuinely dynamic and reported as such, not silently dropped (see
-// SESSION-CONTEXT.md section 3).
+// docs/TECHNICAL_DOC.md §9, Known limitations).
 export function scanFileForKeys(filePath) {
   const code = fs.readFileSync(filePath, "utf8");
   const results = [];

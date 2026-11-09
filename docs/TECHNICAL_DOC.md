@@ -1,7 +1,7 @@
 # digit-i18n-cli — Technical Documentation
 
 This is the complete technical reference for `digit-i18n-cli`. If you're
-looking for a quick start, see [README.md](README.md) instead — this
+looking for a quick start, see [README.md](../README.md) instead — this
 document goes deeper: full architecture, every command's internal behavior,
 every source file's purpose and exports, the full configuration reference,
 and known limitations. Read this if you're maintaining, extending, or trying
@@ -24,35 +24,13 @@ to fully understand this tool, not just use it.
 
 ## 1. The problem
 
-DIGIT's health campaign frontend is built from several independently
-developed modules (`campaign-manager`, `pgr`, `health-hrms`,
-`health-payments`, and others), all of which read localized text from one
-shared backend localization service. Before this tool, that arrangement had
-no supporting tooling at all, which produced six concrete, recurring
-problems:
-
-1. **No naming convention.** Keys were named however a developer felt like
-   it at the time — no prefix, no structure, nothing greppable or
-   predictable across modules.
-2. **No reuse discovery.** The same message ("Save", "Submit", "Cancel",
-   "Are you sure?") gets re-created under a different key in nearly every
-   module, because there was no quick way to check "does this message
-   already exist somewhere" before typing a new key.
-3. **No local source of truth.** The only place to see what keys and
-   messages exist is the live backend itself. There was no offline,
-   searchable registry a developer could consult without hitting the network
-   or opening an admin screen.
-4. **Missing translations silently reach the UI.** If code references a key
-   that has no message anywhere, the UI renders the literal key string
-   (e.g. `DIGIT_CAMPAIGN_CONFIRM_DELETE_MESSAGE`) to a real user. Nobody
-   finds out until QA — or a user — reports it.
-5. **Dead keys accumulate forever.** A key gets removed from code but its
-   message stays in the backend indefinitely; nothing ever flags or cleans
-   these up.
-6. **Manual, error-prone uploads.** The only way to get a new key into the
-   backend was hand-editing a spreadsheet or manually driving the admin
-   screen / Postman — slow, and easy to get wrong (typos, wrong module,
-   wrong tenant).
+See `README.md`'s [The problem](../README.md#the-problem) section — not
+repeated here to avoid the two drifting out of sync. In short: DIGIT's
+health campaign frontend is built from several independently developed
+modules, all reading localized text from one shared backend service, with no
+naming convention, no reuse discovery, no local source of truth, silent
+missing-translation leaks to the UI, no dead-key cleanup, and manual
+spreadsheet-based uploads.
 
 ## 2. Architecture
 
@@ -464,7 +442,8 @@ default (no `continue-on-error` is set anywhere in the template).
 | `github-workflow.example.yml` | GitHub Actions template — see [§6.3](#63-ci-template-for-apply). |
 | `commands/` | Copy-in Claude Code slash command templates (`/i18n-sync`, `/i18n-search`, etc.), one `.md` per CLI command, plus `commands/README.md` with setup instructions. Thin wrappers only — no logic lives here, each one just shells out to the real CLI. `/i18n-apply` always forces `--dry-run` and will not send anything from a chat session. |
 | `README.md` | Quick-start overview and command reference. |
-| `DOCUMENTATION.md` | This file. |
+| `docs/TECHNICAL_DOC.md` | This file. |
+| `docs/PLAN.md` | The original proposal doc — archived for historical context, not a live reference. |
 
 ## 8. Backend API contracts used
 

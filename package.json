@@ -1,6 +1,6 @@
 {
   "name": "digit-i18n-cli",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "DIGIT localization tooling — local registry sync and reuse-discovery search for DIGIT frontend modules",
   "type": "module",
   "bin": {

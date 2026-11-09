@@ -5,13 +5,14 @@ gives every module a naming convention, a searchable local registry, automatic
 missing/dead-key detection, and a safe, human-confirmed way to actually get
 new keys into the backend.
 
-> **Status:** not published to a package registry yet. Install it locally
-> (see [Setup](#setup)) or via `yarn link` for now.
+> **Status:** published on the public npm registry as `digit-i18n-cli`. Install
+> it as a real dependency (see [Setup](#setup)), or `yarn link` it locally
+> during development.
 >
 > This README is a quick-start overview. For the complete technical
 > reference — full architecture, every command's internal behavior, every
 > source file's exports, the full configuration reference, and known
-> limitations — see **[DOCUMENTATION.md](DOCUMENTATION.md)**.
+> limitations — see **[docs/TECHNICAL_DOC.md](docs/TECHNICAL_DOC.md)**.
 
 ## Table of contents
 
@@ -87,6 +88,15 @@ Mapped directly against the problems above:
   module layout; pure ESM.
 
 ## Setup
+
+**In a consuming module** (recommended — installs the published package):
+
+```bash
+npm install digit-i18n-cli   # or: yarn add digit-i18n-cli
+```
+
+**Working on this repo itself, or developing against an unpublished change**
+(what the rest of this section assumes):
 
 ```bash
 yarn install
@@ -459,15 +469,15 @@ sets `git config core.hooksPath .githooks` for the current clone.
   separately-invoked step (see [`apply`](#apply--the-only-command-that-ever-writes-to-the-backend)
   and the [CI template](#github-workflowexampleyml--ci-template-for-apply)).
 
-### Automatic setup once this is a real dependency
+### Automatic setup when installed as a real dependency
 
-Right now every developer has to run `digit-i18n install-hooks` manually,
-once, after installing the package. Once `digit-i18n-cli` is published and
-added as a real dependency (not `yarn link`), this becomes fully automatic:
-**`bin/postinstall-hook.js`**, wired up via this package's own `"postinstall"`
-script, runs `install-hooks` automatically whenever anyone installs
-`digit-i18n-cli` — no script needed in the consuming project's `package.json`
-at all, just listing the dependency.
+When a developer installs `digit-i18n-cli` as a real dependency (not
+`yarn link`), hook setup is fully automatic: **`bin/postinstall-hook.js`**,
+wired up via this package's own `"postinstall"` script, runs `install-hooks`
+automatically whenever anyone installs `digit-i18n-cli` — no script needed in
+the consuming project's `package.json` at all, just listing the dependency.
+(If you're using `yarn link` during development instead, you still need to
+run `digit-i18n install-hooks` manually, once — see below for why.)
 
 - **Scopes itself by scanning the repo, not by trusting `INIT_CWD`.**
   `INIT_CWD` (the npm/yarn-provided env var recovering the directory the
@@ -597,14 +607,13 @@ tool can't resolve/parse — is genuinely dynamic and reported as a gap by
 
 ## Design rule (do not violate when extending this)
 
-**Only `sync` reads from the backend automatically, and `apply` is the only
-command that ever writes to it — and only when a human explicitly runs it
-and confirms.** Every other command (`search`, `stage`, `lint`, `scan`,
-`export`, `deadcheck`, `install-hooks`) stays local-only. If you're extending
-this tool: do not add a second path to the backend outside `apply`, and do
-not make `apply` skip its confirmation by default (`--yes` exists
-specifically for CI, where a PR review already served that purpose — see the
-[CI template](#github-workflowexampleyml--ci-template-for-apply)).
+This builds directly on the one rule stated at the top of this README
+([How this solves it](#how-this-solves-it)) — only `sync` reads from the
+backend automatically, and `apply` is the only command that ever writes to
+it. If you're extending this tool: do not add a second path to the backend
+outside `apply`, and do not make `apply` skip its confirmation by default
+(`--yes` exists specifically for CI, where a PR review already served that
+purpose — see the [CI template](#github-workflowexampleyml--ci-template-for-apply)).
 
 ## Project layout
 
@@ -645,6 +654,9 @@ specifically for CI, where a PR review already served that purpose — see the
 | `src/default-modules.config.json` | Bundled fallback module registry (same shape as the example above), used when no `digit-i18n.config.json` exists in the current directory |
 | `github-workflow.example.yml` | Template to copy into a consuming repo's `.github/workflows/` — runs `apply --yes` on merge |
 | `commands/` | Copy-in Claude Code `/i18n-...` slash commands — see [commands/README.md](commands/README.md) |
+| `docs/TECHNICAL_DOC.md` | Full technical reference — see [Status](#digit-i18n-cli) above |
+| `docs/PLAN.md` | Original proposal doc, archived for historical context |
+| `CLAUDE.md` | Project guidance for Claude Code sessions working in this repo |
 
 ## Roadmap
 
@@ -656,6 +668,7 @@ specifically for CI, where a PR review already served that purpose — see the
 - [x] `apply` — the only backend-writing command, human-confirmed
 - [x] Correctly scoped automatic hook setup in npm/yarn workspaces (`bin/postinstall-hook.js`)
 - [x] `github-workflow.example.yml` — CI template that runs `apply --yes` on merge
+- [x] Published on the public npm registry
 - [ ] Turn `lint`/`scan`'s `--strict` on for real once accuracy is proven on more modules
 - [ ] Roll out beyond the initial pilot module
 - [ ] Verify a real, successful `apply` run (login + upsert) against an actual DIGIT backend
