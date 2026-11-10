@@ -1,6 +1,6 @@
 {
   "name": "digit-i18n-cli",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "DIGIT localization tooling — local registry sync and reuse-discovery search for DIGIT frontend modules",
   "type": "module",
   "bin": {
@@ -22,7 +22,7 @@
     "dotenv": "^16.4.5",
     "fuse.js": "^7.0.0",
     "glob": "^13.0.6",
-    "google-translate-api-x": "^10.7.2"
+    "google-translate-api-x": "10.7.2"
   },
   "license": "MIT"
 }
